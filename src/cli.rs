@@ -3,11 +3,18 @@ use std::io::{self, BufReader, BufWriter, Read, Write};
 
 use crate::base64::{encode, decode, BASE64_ALPHABET};
 
-fn read_file_args() -> Option<(String, String)> {
+enum Mode {
+    Encode,
+    Decode,
+}
+
+fn read_file_args(mode: Mode) -> Option<(String, String)> {
+    use std::io::{self, Write};
+
     print!("Enter: input_file [output_file]: ");
     io::stdout().flush().unwrap();
 
-    let mut line: String = String::new();
+    let mut line = String::new();
     io::stdin().read_line(&mut line).unwrap();
     let parts: Vec<&str> = line.trim().split_whitespace().collect();
 
@@ -16,11 +23,21 @@ fn read_file_args() -> Option<(String, String)> {
         return None;
     }
 
-    let input_file: String = parts[0].to_string();
-    let output_file: String = if parts.len() > 1 {
+    let input_file = parts[0].to_string();
+    let output_file = if parts.len() > 1 {
         parts[1].to_string()
     } else {
-        format!("{}.base64", input_file)
+        match mode {
+            Mode::Encode => format!("{}.base64", input_file),
+            Mode::Decode => {
+                if input_file.ends_with(".base64") {
+                    input_file.trim_end_matches(".base64").to_string()
+                } else {
+                    println!("Invalid input file extension provided!");
+                    return None;
+                }
+            }
+        }
     };
 
     Some((input_file, output_file))
@@ -50,7 +67,7 @@ pub fn encode_file(input_file: &str, output_file: &str) -> io::Result<usize> {
 }
 
 fn handle_encode() {
-    if let Some((input_file, output_file)) = read_file_args() {
+    if let Some((input_file, output_file)) = read_file_args(Mode::Encode) {
         println!("Encoding from {} -> {}", input_file, output_file);
 
         match encode_file(&input_file, &output_file) {
@@ -65,10 +82,10 @@ fn handle_encode() {
 }
 
 fn handle_decode() {
-    if let Some((input_file, output_file)) = read_file_args() {
+    if let Some((input_file, output_file)) = read_file_args(Mode::Decode) {
         println!("Decoding from {} -> {}", input_file, output_file);
 
-        let output_file = if output_file.is_empty() {
+        let output_file: String = if output_file.is_empty() {
             if input_file.ends_with(".base64") {
                 input_file.trim_end_matches(".base64").to_string()
             } else {
@@ -78,7 +95,7 @@ fn handle_decode() {
             output_file
         };
 
-        let content = match std::fs::read_to_string(&input_file) {
+        let content: String = match std::fs::read_to_string(&input_file) {
             Ok(c) => c,
             Err(e) => {
                 eprintln!("Failed to read {}: {}", input_file, e);
@@ -93,6 +110,10 @@ fn handle_decode() {
             let line_no: usize = line_num + 1;
             let line: &str = line.trim();
 
+            if line.is_empty() {
+                continue;
+            }
+            
             if line.starts_with('_') {
                 continue;
             }
