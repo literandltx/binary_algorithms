@@ -1,7 +1,7 @@
-const BASE64_ALPHABET: &[u8; 64] =
+pub const BASE64_ALPHABET: &[u8; 64] =
     b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+\\";
 
-pub(crate) fn encode(input: &[u8]) -> String {
+pub fn encode(input: &[u8]) -> String {
     let mut out: String = String::new();
     let mut i: usize = 0;
 
@@ -34,7 +34,7 @@ pub(crate) fn encode(input: &[u8]) -> String {
     out
 }
 
-pub(crate) fn decode(encoded: &str) -> Result<Vec<u8>, String> {
+pub fn decode(encoded: &str) -> Result<Vec<u8>, String> {
     let mut out: Vec<u8> = Vec::new();
     let mut buf: u32 = 0;
     let mut bits_collected = 0;
