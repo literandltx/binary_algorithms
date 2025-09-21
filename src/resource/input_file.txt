@@ -1,4 +1,4 @@
 NOTE. The original codes are implemented on a private codebase and will not be released.
 This repo is an official but abridged version. See the list for plans.
 
-pretty_test_0
+pretty_text_0
