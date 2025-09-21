@@ -1,7 +1,7 @@
 use std::fs::File;
 use std::io::{self, BufReader, BufWriter, Read, Write};
 
-use crate::base64::{encode, decode, BASE64_ALPHABET};
+use crate::lab1::base64::{encode, decode, BASE64_ALPHABET};
 
 enum Mode {
     Encode,
@@ -28,10 +28,10 @@ fn read_file_args(mode: Mode) -> Option<(String, String)> {
         parts[1].to_string()
     } else {
         match mode {
-            Mode::Encode => format!("{}.base64", input_file),
+            Mode::Encode => format!("{}.lab1", input_file),
             Mode::Decode => {
-                if input_file.ends_with(".base64") {
-                    input_file.trim_end_matches(".base64").to_string()
+                if input_file.ends_with(".lab1") {
+                    input_file.trim_end_matches(".lab1").to_string()
                 } else {
                     println!("Invalid input file extension provided!");
                     return None;
@@ -86,8 +86,8 @@ fn handle_decode() {
         println!("Decoding from {} -> {}", input_file, output_file);
 
         let output_file: String = if output_file.is_empty() {
-            if input_file.ends_with(".base64") {
-                input_file.trim_end_matches(".base64").to_string()
+            if input_file.ends_with(".lab1") {
+                input_file.trim_end_matches(".lab1").to_string()
             } else {
                 "decoded.bin".to_string()
             }
@@ -95,7 +95,7 @@ fn handle_decode() {
             output_file
         };
 
-        let content: String = match std::fs::read_to_string(&input_file) {
+        let content = match std::fs::read_to_string(&input_file) {
             Ok(c) => c,
             Err(e) => {
                 eprintln!("Failed to read {}: {}", input_file, e);
@@ -103,30 +103,26 @@ fn handle_decode() {
             }
         };
 
+        let mut lines = content
+            .lines()
+            .map(str::trim)
+            .filter(|l| !l.is_empty() && !l.starts_with('_'))
+            .peekable();
+
         let mut decoded: Vec<u8> = Vec::new();
-        let mut ended: bool = false;
+        let mut ended = false;
+        let mut line_no = 0;
 
-        for (line_num, line) in content.lines().enumerate() {
-            let line_no: usize = line_num + 1;
-            let line: &str = line.trim();
-
-            if line.is_empty() {
-                continue;
-            }
-            
-            if line.starts_with('_') {
-                continue;
-            }
+        while let Some(line) = lines.next() {
+            line_no += 1;
+            let is_last_line: bool = lines.peek().is_none();
 
             if ended {
-                eprintln!(
-                    "Warning (line {}): Data found after end of message",
-                    line_no
-                );
+                eprintln!("Warning (line {}): Data found after end of message", line_no);
                 break;
             }
 
-            if line.len() != 76 && !line.contains('=') {
+            if !is_last_line && line.len() != 76 {
                 eprintln!(
                     "Error (line {}): Incorrect line length {}",
                     line_no,

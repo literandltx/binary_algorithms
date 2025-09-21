@@ -1,8 +1,5 @@
-mod base64;
-mod cli;
-
-mod base64_test;
+mod lab1;
 
 fn main() {
-    cli::run();
+    lab1::cli::run();
 }

@@ -2,7 +2,7 @@
 mod tests {
     use base64::{Engine as _, engine::general_purpose};
 
-    use crate::base64::{decode, encode};
+    use crate::lab1::base64::{decode, encode};
 
     #[test]
     fn test_encode_matches_lib() {
