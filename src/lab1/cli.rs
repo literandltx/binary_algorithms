@@ -28,10 +28,10 @@ fn read_file_args(mode: Mode) -> Option<(String, String)> {
         parts[1].to_string()
     } else {
         match mode {
-            Mode::Encode => format!("{}.lab1", input_file),
+            Mode::Encode => format!("{}.base64", input_file),
             Mode::Decode => {
-                if input_file.ends_with(".lab1") {
-                    input_file.trim_end_matches(".lab1").to_string()
+                if input_file.ends_with(".base64") {
+                    input_file.trim_end_matches(".base64").to_string()
                 } else {
                     println!("Invalid input file extension provided!");
                     return None;
@@ -86,8 +86,8 @@ fn handle_decode() {
         println!("Decoding from {} -> {}", input_file, output_file);
 
         let output_file: String = if output_file.is_empty() {
-            if input_file.ends_with(".lab1") {
-                input_file.trim_end_matches(".lab1").to_string()
+            if input_file.ends_with(".base64") {
+                input_file.trim_end_matches(".base64").to_string()
             } else {
                 "decoded.bin".to_string()
             }
