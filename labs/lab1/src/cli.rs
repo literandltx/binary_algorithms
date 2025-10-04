@@ -1,7 +1,7 @@
 use std::fs::File;
 use std::io::{self, BufReader, BufWriter, Read, Write};
 
-use crate::lab1::base64::{encode, decode, BASE64_ALPHABET};
+use crate::base64::{encode, decode, BASE64_ALPHABET};
 
 enum Mode {
     Encode,
@@ -164,7 +164,7 @@ fn handle_decode() {
     }
 }
 
-pub(crate) fn run() {
+pub fn run() {
     loop {
         println!("Options:");
         println!("1. Encode");

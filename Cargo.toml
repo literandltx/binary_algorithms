@@ -4,4 +4,17 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-base64 = { version = "0.22.1" }
+lab1 = { path = "labs/lab1" }
+lab2 = { path = "labs/lab2" }
+lab3 = { path = "labs/lab3" }
+lab4 = { path = "labs/lab4" }
+lab5 = { path = "labs/lab5" }
+
+[workspace]
+members = [
+    "labs/lab1",
+    "labs/lab2",
+    "labs/lab3",
+    "labs/lab4",
+    "labs/lab5"
+]
