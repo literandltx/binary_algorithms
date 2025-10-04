@@ -3,7 +3,7 @@ use std::env;
 fn main() {
     match env::args().nth(1).as_deref() {
         Some("lab1") => lab1::cli::run(),
-        Some("lab2") => lab2::cli::run(),
+        Some("lab2") => lab2::cli::run().unwrap(),
         Some("lab3") => lab3::cli::run(),
         Some("lab4") => lab4::cli::run(),
         Some("lab5") => lab5::cli::run(),
