@@ -1,23 +1,25 @@
-use std::fs::remove_file;
+use std::fs::{create_dir_all, remove_file};
 use std::path::PathBuf;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use crate::bit_stream::{BitStreamReader, BitStreamWriter};
 
-fn tmp_path() -> PathBuf {
+fn tmp_path() -> std::io::Result<PathBuf> {
     let ts: u128 = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .unwrap()
         .as_millis();
-    let mut p: PathBuf = std::env::temp_dir();
-    p.push(format!("lab2_demo-{}.bin", ts));
-    p
+    let crate_root: PathBuf = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+    let assets: PathBuf = crate_root.join("assets");
+    create_dir_all(&assets)?;
+
+    Ok(assets.join(format!("lab2_demo_{}.bin", ts)))
 }
 
 pub fn run() -> std::io::Result<()> {
     println!("lab2 demo");
     let keep: bool = std::env::args().any(|a: String| a == "--keep");
-    let path: PathBuf = tmp_path();
+    let path: PathBuf = tmp_path()?;
 
     let mut writer: BitStreamWriter = BitStreamWriter::create(&path)?;
     let a1: [u8; 2] = [0xE1, 0x01];
@@ -35,7 +37,11 @@ pub fn run() -> std::io::Result<()> {
     println!("b1 = {:02X?}", b1);
     println!("b2 = {:02X?}", b2);
 
-    if !keep {
+    if keep {
+        if let Some(name) = path.file_name().and_then(|s| s.to_str()) {
+            println!("Kept: labs/lab2/assets/{name}");
+        }
+    } else {
         let _ = remove_file(&path);
     }
 

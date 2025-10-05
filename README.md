@@ -1,20 +1,7 @@
 ## Launch
-Build and test everything (from repo root)
+Build, run and test everything (from repo root)
 ```
 cargo build --release
 cargo test --all
-```
-Or just one lab
-```
-cargo build -p lab1
-cargo test  -p lab1
-```
-
-Run via root dispatcher (from repo root)
-```
-cargo run -- lab1
-```
-Or run a lab directly
-```
-cargo run -p lab1
+cargo run --release <lab1|lab2|lab3|lab4|lab5>
 ```

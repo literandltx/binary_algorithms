@@ -11,7 +11,7 @@ fn main() {
             eprintln!("Usage: cargo run <lab1|lab2|lab3|lab4|lab5>");
             eprintln!("Examples:");
             eprintln!("  cargo run lab1");
-            eprintln!("  cargo run lab2");
+            eprintln!("  cargo run lab2 [--keep [<filename>]]");
         }
     }
 }
