@@ -1,6 +1,8 @@
 #[cfg(test)]
 mod tests {
-    use lab2::bit_stream::{BitStreamReader, BitStreamWriter};
+    use lab2::bit_stream_reader::BitStreamReader;
+    use lab2::bit_stream_writer::BitStreamWriter;
+
     use std::fs;
 
     const EXAMPLE_FILE: &str = "bit_stream_example.bin";
