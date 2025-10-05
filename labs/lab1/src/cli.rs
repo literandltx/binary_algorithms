@@ -1,7 +1,7 @@
 use std::fs::File;
 use std::io::{self, BufReader, BufWriter, Read, Write};
 
-use crate::base64::{encode, decode, BASE64_ALPHABET};
+use crate::base64::{BASE64_ALPHABET, decode, encode};
 
 enum Mode {
     Encode,
@@ -118,7 +118,10 @@ fn handle_decode() {
             let is_last_line: bool = lines.peek().is_none();
 
             if ended {
-                eprintln!("Warning (line {}): Data found after end of message", line_no);
+                eprintln!(
+                    "Warning (line {}): Data found after end of message",
+                    line_no
+                );
                 break;
             }
 
@@ -159,7 +162,11 @@ fn handle_decode() {
         if let Err(e) = std::fs::write(&output_file, &decoded) {
             eprintln!("Failed to write {}: {}", output_file, e);
         } else {
-            println!("Done. Written {} bytes to {} \n", decoded.len(), output_file);
+            println!(
+                "Done. Written {} bytes to {} \n",
+                decoded.len(),
+                output_file
+            );
         }
     }
 }

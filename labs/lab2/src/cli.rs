@@ -5,7 +5,10 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use crate::bit_stream::{BitStreamReader, BitStreamWriter};
 
 fn tmp_path() -> PathBuf {
-    let ts: u128 = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_millis();
+    let ts: u128 = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap()
+        .as_millis();
     let mut p: PathBuf = std::env::temp_dir();
     p.push(format!("lab2_demo-{}.bin", ts));
     p
@@ -13,7 +16,7 @@ fn tmp_path() -> PathBuf {
 
 pub fn run() -> std::io::Result<()> {
     println!("lab2 demo");
-    let keep: bool = std::env::args().any(| a: String | a == "--keep");
+    let keep: bool = std::env::args().any(|a: String| a == "--keep");
     let path: PathBuf = tmp_path();
 
     let mut writer: BitStreamWriter = BitStreamWriter::create(&path)?;
